@@ -3,682 +3,832 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KANO Gear Effects Guide</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Kano Enchants Guide</title>
     <style>
+        :root {
+            /* Dark theme (default) */
+            --primary-color: #1a1a1a;
+            --secondary-color: #333;
+            --background-color: #000;
+            --card-background: #1a1a1a;
+            --text-color: #fff;
+            --border-color: #333;
+            --tab-active: #2d4a2d;
+            --tab-hover: #2a2a2a;
+            --accent-color: #4CAF50;
+            --header-color: #4CAF50;
+            --tier-badge: #2d4a2d;
+        }
+
+        [data-theme="puppy"] {
+            --primary-color: #f8e1ee;
+            --secondary-color: #e5c1e5;
+            --background-color: #fff5f7;
+            --card-background: #ffffff;
+            --text-color: #9b6b9e;
+            --border-color: #e5c1e5;
+            --tab-active: #d4a5d4;
+            --tab-hover: #e5c1e5;
+            --accent-color: #d4a5d4;
+            --header-color: #9b6b9e;
+            --tier-badge: #d4a5d4;
+            --rainbow-gradient: linear-gradient(45deg, 
+                #f8e1ee, /* pastel pink */
+                #fffacd, /* pastel yellow */
+                #e0f7fa, /* pastel blue */
+                #f3e5f5, /* pastel purple */
+                #e8f5e9, /* pastel green */
+                #f8e1ee  /* back to pastel pink */
+            );
+            --cute-gradient: linear-gradient(135deg,
+                #f8e1ee,
+                #e5c1e5,
+                #f8e1ee
+            );
+            --enchant-name-color: #7d4b7d;
+            --category-header-color: #7d4b7d;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        :root {
-            --primary: #1a2a3a;
-            --secondary: #2c3e50;
-            --accent: #3498db;
-            --highlight: #2ecc71;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --danger: #e74c3c;
-            --warning: #f39c12;
-            --success: #27ae60;
-        }
-        
+
         body {
-            background: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
-            color: var(--light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            padding-bottom: 50px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
-        
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            position: relative;
+            min-height: 100vh;
+            padding-bottom: 60px;
         }
-        
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .theme-toggle:hover {
+            opacity: 0.9;
+        }
+
         header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 20px 0;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
         }
-        
-        header h1 {
-            font-size: 2.5rem;
+
+        h1 {
+            font-size: 2.5em;
             margin-bottom: 10px;
-            color: var(--highlight);
-            text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+            color: var(--header-color);
         }
-        
-        header p {
-            max-width: 800px;
-            margin: 0 auto;
-            color: #bdc3c7;
-            font-size: 1.1rem;
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
         }
-        
-        .filters {
-            background: rgba(44, 62, 80, 0.8);
+
+        .tab {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tab:hover {
+            background-color: var(--tab-hover);
+        }
+
+        .tab.active {
+            background-color: var(--tab-active);
+        }
+
+        .enchant-section {
+            background-color: var(--card-background);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            display: none;
+            transition: background-color 0.3s;
         }
-        
-        .filter-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 15px;
+
+        .enchant-section.active {
+            display: block;
         }
-        
-        .search-box {
-            flex: 1;
-            min-width: 300px;
-            position: relative;
-        }
-        
-        .search-box input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border: 2px solid var(--accent);
-            border-radius: 30px;
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-        
-        .search-box input:focus {
-            border-color: var(--highlight);
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.4);
-        }
-        
-        .search-box i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent);
-        }
-        
-        .slot-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .slot-btn {
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid var(--accent);
-            color: var(--light);
-            padding: 8px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .slot-btn:hover {
-            background: var(--accent);
-        }
-        
-        .slot-btn.active {
-            background: var(--accent);
-            border-color: var(--highlight);
-            box-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px 20px;
+
+        .enchant-card {
+            background-color: var(--primary-color);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            margin-top: 10px;
-            font-size: 0.9rem;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, background-color 0.3s;
         }
-        
-        .table-container {
-            background: rgba(44, 62, 80, 0.8);
+
+        .enchant-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .enchant-name {
+            font-size: 1.2em;
+            color: var(--header-color);
+            margin-bottom: 5px;
+        }
+
+        .enchant-description {
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            background-color: var(--tier-badge);
+            color: #fff;
+        }
+
+        .credit {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: var(--header-color);
+            font-size: 1.2em;
+            padding: 10px;
+            background-color: var(--primary-color);
             border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        [data-theme="puppy"] .enchant-card {
+            background: linear-gradient(135deg, #fff5f7, #ffe4e1);
+            border: 3px solid #e5c1e5;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.3);
+            position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
+
+        [data-theme="puppy"] .enchant-card::before {
+            content: '✨';
+            margin-right: 5px;
+            animation: sparkle 1.5s infinite;
+            font-size: 1.2em;
         }
-        
-        thead {
-            background: var(--secondary);
-            position: sticky;
-            top: 0;
+
+        [data-theme="puppy"] .enchant-card::after {
+            content: '💖';
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 1.4em;
+            animation: float 3s ease-in-out infinite;
         }
-        
-        th {
-            padding: 15px 20px;
-            text-align: left;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--highlight);
-            border-bottom: 2px solid var(--accent);
+
+        [data-theme="puppy"] .enchant-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(229, 193, 229, 0.4);
+            border-color: #d4a5d4;
         }
-        
-        tbody tr {
-            border-bottom: 1px solid rgba(127, 140, 141, 0.3);
-            transition: background 0.3s;
-        }
-        
-        tbody tr:hover {
-            background: rgba(52, 152, 219, 0.1);
-        }
-        
-        td {
-            padding: 15px 20px;
-            vertical-align: top;
-        }
-        
-        .slot-cell {
+
+        [data-theme="puppy"] .enchant-name {
+            color: var(--enchant-name-color);
             font-weight: bold;
-            color: var(--highlight);
-            white-space: nowrap;
+            font-size: 1.3em;
+            text-shadow: none;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
         }
-        
-        .name-cell {
-            font-weight: 600;
-            color: #3498db;
+
+        [data-theme="puppy"] .tier-badge {
+            background: var(--cute-gradient);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(229, 193, 229, 0.3);
+            font-weight: bold;
+            padding: 3px 10px;
         }
-        
-        .effect-cell {
-            color: #ecf0f1;
+
+        [data-theme="puppy"] .tab {
+            background: var(--cute-gradient);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(229, 193, 229, 0.2);
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+
+        [data-theme="puppy"] .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(229, 193, 229, 0.3);
         }
-        
-        .pagination button {
-            background: var(--accent);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
+
+        [data-theme="puppy"] .tab.active {
+            background: var(--rainbow-gradient);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(229, 193, 229, 0.4);
+            transform: scale(1.05);
         }
-        
-        .pagination button:hover {
-            background: var(--highlight);
+
+        [data-theme="puppy"] h1 {
+            background: var(--rainbow-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 2px 2px 4px rgba(229, 193, 229, 0.2);
+            font-size: 2.8em;
+            animation: rainbow 3s linear infinite;
         }
-        
-        .pagination button:disabled {
-            background: #7f8c8d;
-            cursor: not-allowed;
-        }
-        
-        .no-results {
+
+        [data-theme="puppy"] h2 {
+            color: var(--category-header-color);
+            font-size: 2em;
+            margin: 20px 0;
             text-align: center;
-            padding: 40px;
-            color: #bdc3c7;
-            font-style: italic;
+            background: none;
+            -webkit-background-clip: initial;
+            background-clip: initial;
+            text-shadow: none;
+            font-weight: bold;
         }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            color: #95a5a6;
-            border-top: 1px solid rgba(127, 140, 141, 0.3);
+
+        [data-theme="puppy"] .credit {
+            background: var(--cute-gradient);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.3);
+            font-weight: bold;
+            font-size: 1.3em;
+            padding: 15px;
         }
-        
-        @media (max-width: 768px) {
-            .filter-row {
-                flex-direction: column;
-            }
-            
-            th, td {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .slot-filters {
-                justify-content: center;
-            }
+
+        [data-theme="puppy"] .theme-toggle {
+            background: var(--rainbow-gradient);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.3);
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 12px 25px;
+            transition: all 0.3s ease;
         }
-        
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 2rem;
-            }
-            
-            .slot-btn {
-                padding: 6px 12px;
-                font-size: 0.85rem;
-            }
-            
-            table {
-                display: block;
-                overflow-x: auto;
-            }
+
+        [data-theme="puppy"] .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(229, 193, 229, 0.4);
+        }
+
+        [data-theme="puppy"] .enchant-section {
+            background: linear-gradient(135deg, #fff5f7, #ffe4e1);
+            border: 3px solid #e5c1e5;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.2);
+            padding: 25px;
+        }
+
+        [data-theme="puppy"] header {
+            background: var(--cute-gradient);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.3);
+            padding: 25px;
+        }
+
+        [data-theme="puppy"] .tabs {
+            background: var(--cute-gradient);
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(229, 193, 229, 0.3);
+            padding: 15px;
+            gap: 15px;
+        }
+
+        @keyframes sparkle {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.3) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(10deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        [data-theme="puppy"] .enchant-description {
+            color: #9b6b9e;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        [data-theme="puppy"] body {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(248, 225, 238, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(229, 193, 229, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(155, 107, 158, 0.1) 0%, transparent 50%);
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1><i class="fas fa-helmet-battle"></i> KANO Gear Effects Guide</h1>
-            <p>Comprehensive reference for all gear effects.</p>
-        </div>
-    </header>
-    
+    <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
     <div class="container">
-        <div class="filters">
-            <div class="filter-row">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Search effects, slots, or keywords...">
-                </div>
-            </div>
-            
-            <div class="filter-row">
-                <div class="slot-filters" id="slotFilters">
-                    <!-- Slot buttons will be generated here -->
-                </div>
-            </div>
-            
-            <div class="stats">
-                <div>Total Effects: <span id="totalEffects">0</span></div>
-                <div>Showing: <span id="showingCount">0</span> effects</div>
-                <div>Filtered by: <span id="filterStatus">All Slots</span></div>
-            </div>
+        <header>
+            <h1>Kano Enchants Guide</h1>
+            <p>A comprehensive guide to all available enchantments</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('helmet')">Helmet</button>
+            <button class="tab" onclick="showSection('chest')">Chest</button>
+            <button class="tab" onclick="showSection('legs')">Legs</button>
+            <button class="tab" onclick="showSection('boots')">Boots</button>
+            <button class="tab" onclick="showSection('gloves')">Gloves</button>
+            <button class="tab" onclick="showSection('cape')">Cape</button>
+            <button class="tab" onclick="showSection('weapon')">Weapon</button>
+            <button class="tab" onclick="showSection('offhand')">Offhand</button>
+            <button class="tab" onclick="showSection('necklace')">Necklace</button>
+            <button class="tab" onclick="showSection('ring')">Ring</button>
+            <button class="tab" onclick="showSection('multiple')">Multiple</button>
+            <button class="tab" onclick="showSection('skilling')">Skilling</button>
         </div>
-        
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Slot</th>
-                        <th style="width: 25%;">Name</th>
-                        <th>Effect</th>
-                    </tr>
-                </thead>
-                <tbody id="effectsTable">
-                    <!-- Effects will be populated here -->
-                </tbody>
-            </table>
-            <div id="noResults" class="no-results">
-                <i class="fas fa-exclamation-circle"></i> No effects found matching your criteria
+
+        <section class="enchant-section active" id="helmet-section">
+            <h2>Helmet Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Protection <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">2% Chance to reduce damage by 5%</div>
             </div>
-        </div>
-        
-        <div class="pagination">
-            <button id="prevBtn"><i class="fas fa-chevron-left"></i> Previous</button>
-            <span id="pageInfo">Page 1 of 1</span>
-            <button id="nextBtn">Next <i class="fas fa-chevron-right"></i></button>
-        </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Strike I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">5% chance to hit a critical hit</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Strike II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">7% chance to hit a critical hit</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Strike III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to hit a critical hit</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Venomous <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Chance to cure yourself of poison/venom & chance to envenom your opponent</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Increased Luck I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Increases your chances of getting a rare drop by 1%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Increased Luck II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Increases your chances of getting a rare drop by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Increased Luck III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Increases your chances of getting a rare drop by 3%</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="chest-section">
+            <h2>Chest Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Saradomin's Grace <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">2% chance to insta-kill at under 150 hp, but drain 5 prayer points</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Zamorak's Curse <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">2% chance to deal 1.5x damage, but will also suffer 5 damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Guthix's Balance <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">2% chance to heal you and your opponent for 10 damage</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="legs-section">
+            <h2>Legs Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Spell Suppressor I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to reduce incoming spell damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Spell Suppressor II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to reduce incoming spell damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Spell Suppressor III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to reduce incoming spell damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Range Suppressor I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to reduce incoming range damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Range Suppressor II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to reduce incoming range damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Range Suppressor III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to reduce incoming range damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Sword Suppressor I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to reduce incoming melee damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Sword Suppressor II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to reduce incoming melee damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Sword Suppressor III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to reduce incoming melee damage</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="boots-section">
+            <h2>Boots Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Featherweight <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Reduces energy drain by 25%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Stand Your Ground <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Staying put increases your damage by 1% for maximum of 5%</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="gloves-section">
+            <h2>Gloves Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Damage I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Critical hits buffed to 20% more damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Damage II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Critical hits buffed to 25% more damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Critical Damage III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Critical hits buffed to 30% more damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Bender I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to throw a fireball at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Bender II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to throw a fireball at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Bender III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to throw a fireball at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Water Bender I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to drown your enemy in water</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Water Bender II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to drown your enemy in water</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Water Bender III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to drown your enemy in water</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Earth Bender I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to throw a rock at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Earth Bender II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to throw a rock at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Earth Bender III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to throw a rock at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Air Bender I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to throw a fireball at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Air Bender II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to throw a fireball at your enemy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Air Bender III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to throw a fireball at your enemy</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="cape-section">
+            <h2>Cape Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Risking It All <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">For every HP missing you do 0.25% more damage (max 25%)</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Pray By Hunger <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to recover prayer points when consuming food</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="weapon-section">
+            <h2>Weapon Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Reduced Special I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Special attacks use 10% less energy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Reduced Special II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Special attacks use 25% less energy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Reduced Special III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Special attacks use 50% less energy</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Damage I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to deal 6 fire damage to your opponent</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Damage II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to deal 9 fire damage to your opponent</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Fire Damage III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to deal 15 fire damage to your opponent</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Arrow Splitter I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to split arrow attacks, hitting nearby 2 enemies</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Arrow Splitter II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to split arrow attacks, hitting nearby 5 enemies</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Arrow Splitter III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to split arrow attacks, hitting nearby 7 enemies</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Splinter Blitz I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to freeze nearby 2 enemies for 2 seconds while doing cold damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Splinter Blitz II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to freeze nearby 5 enemies for 2 seconds while doing cold damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Splinter Blitz III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to freeze nearby 7 enemies for 2 seconds while doing cold damage</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Slice & Dice I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to teleport and attack 2 enemies with a single attack</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Slice & Dice II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to teleport and attack 3 enemies with a double attack</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Slice & Dice III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to teleport and attack 4 enemies with a triple attack</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Medusa I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">10% chance to turn your opponent to stone for 2 seconds</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Medusa II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to turn your opponent to stone for 3 seconds</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Medusa III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to turn your opponent to stone for 4 seconds</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Wretched I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">3% chance to turn enemies against themselves</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Wretched II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">5% chance to turn enemies against themselves</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Wretched III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">10% chance to turn enemies against themselves</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="offhand-section">
+            <h2>Offhand Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Shield Crash <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">5% chance to damage a target with your shield and heal 25% of the damage amount</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="necklace-section">
+            <h2>Necklace Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Holy Grace I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">6% chance to restore 5 prayer points on kill</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Holy Grace II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">10% chance to restore 5 prayer points on kill</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Holy Grace III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">20% chance to restore 5 prayer points on kill</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="ring-section">
+            <h2>Ring Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Lucky Looter I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">1% chance to receive an additional drop</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Lucky Looter II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">2% chance to receive an additional drop</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Lucky Looter III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">3% chance to receive an additional drop</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="multiple-section">
+            <h2>Multiple Slot Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Master Slayer <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">2% extra accuracy and damage while on slayer tasks per piece worn</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Dragon Slayer I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards dragons by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Dragon Slayer II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards dragons by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Dragon Slayer III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards dragons by 5%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Armadyl Archer I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Armadyl creatures by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Armadyl Archer II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Armadyl creatures by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Armadyl Archer III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Armadyl creatures by 5%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Bandos Berserker I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Bandos creatures by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Bandos Berserker II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Bandos creatures by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Bandos Berserker III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Bandos creatures by 5%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Saradomin Slayer I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Saradomin creatures by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Saradomin Slayer II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Saradomin creatures by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Saradomin Slayer III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Saradomin creatures by 5%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Zamorak Zealot I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Zamorakian creatures by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Zamorak Zealot II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Zamorakian creatures by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Zamorak Zealot III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Accuracy & damage buff to Zamorakian creatures by 5%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Spider Squasher I <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards spiders by 2%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Spider Squasher II <span class="tier-badge">Tier 2</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards spiders by 3%</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Spider Squasher III <span class="tier-badge">Tier 3</span></div>
+                <div class="enchant-description">Buffs your accuracy and damage towards spiders by 5%</div>
+            </div>
+        </section>
+
+        <section class="enchant-section" id="skilling-section">
+            <h2>Skilling Enchantments</h2>
+            <div class="enchant-card">
+                <div class="enchant-name">Seaworld <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Chance to catch 2 fish at once</div>
+            </div>
+            <div class="enchant-card">
+                <div class="enchant-name">Blacksmith <span class="tier-badge">Tier 1</span></div>
+                <div class="enchant-description">Chance to smith 2 armours at once</div>
+            </div>
+        </section>
+
+        <div class="credit">Made by Puppy</div>
     </div>
-    
-    <footer class="container">
-        <p>KANO Gear Effects Guide | Puppy</p>
-    </footer>
 
     <script>
-        // Gear effects data
-        const gearEffectsData = [
-            { slot: "Boots", name: "Featherweight", effect: "Reduces used run energy by 25%." },
-            { slot: "Boots", name: "Stand Your Ground", effect: "Staying on the same tile will increase your damage by 1%, stacking up to a maximum of 5%." },
-            { slot: "Boots", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Boots", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Boots", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Boots", name: "Armadyl Archer 1", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Armadyl Archer 2", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Armadyl Archer 3", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Bandos Berserker 1", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Bandos Berserker 2", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Bandos Berserker 3", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Saradomin Slayer 1", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Saradomin Slayer 2", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Saradomin Slayer 3", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Boots", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Boots", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Boots", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Boots", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Capes", name: "Risking It All", effect: "For every HP missing, you do 0.25% more damage, up to a maximum of 25%." },
-            { slot: "Capes", name: "Pray By Hunger", effect: "10% chance to recover Prayer Points when consuming a healing food source." },
-            { slot: "Chest", name: "Saradomin's Grace", effect: "1% chance to instakill an NPC, but drains 10 prayer points as a result." },
-            { slot: "Chest", name: "Zamorak's Curse", effect: "2% chance to deal 150% damage, but will also suffer 5 damage as a result." },
-            { slot: "Chest", name: "Guthix's Balance", effect: "2% chance to heal you AND your opponent for 10 damage." },
-            { slot: "Chest", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Chest", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Chest", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Chest", name: "Armadyl Archer 1", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Armadyl Archer 2", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Armadyl Archer 3", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Bandos Berserker 1", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Bandos Berserker 2", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Bandos Berserker 3", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Chest", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Chest", name: "Protection", effect: "2% chance to reduce damage by 5%, per piece worn. (Up to 3 pieces in their respected slots.) (Chest, Helmet, Legs)" },
-            { slot: "Chest", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Chest", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Chest", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Shield", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Shield", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Shield", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Shield", name: "Armadyl Archer 1", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Armadyl Archer 2", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Armadyl Archer 3", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Saradomin Slayer 1", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Saradomin Slayer 2", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Saradomin Slayer 3", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Shield", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Shield", name: "ShieldCrash", effect: "5% chance to damage your target with your shield, and heal 25% of the damage dealt." },
-            { slot: "Shield", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Shield", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Shield", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Helmet", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Helmet", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Helmet", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Helmet", name: "Armadyl Archer 1", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Armadyl Archer 2", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Armadyl Archer 3", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Bandos Berserker 1", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Bandos Berserker 2", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Bandos Berserker 3", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Saradomin Slayer 1", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Saradomin Slayer 2", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Saradomin Slayer 3", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Helmet", name: "Critical Strike 1", effect: "10% chance to land a Critical Strike." },
-            { slot: "Helmet", name: "Critical Strike 2", effect: "15% chance to land a Critical Strike." },
-            { slot: "Helmet", name: "Critical Strike 3", effect: "20% chance to land a Critical Strike." },
-            { slot: "Helmet", name: "Venomous", effect: "25% chance to cure yourself from Venom and Poison, plus a chance to envenom your opponent." },
-            { slot: "Helmet", name: "Increased Luck 1", effect: "Extra 1% chance of a rare drop." },
-            { slot: "Helmet", name: "Increased Luck 2", effect: "Extra 2% chance of a rare drop." },
-            { slot: "Helmet", name: "Increased Luck 3", effect: "Extra 3% chance of a rare drop." },
-            { slot: "Helmet", name: "Protection", effect: "2% chance to reduce damage by 5%, per piece worn. (Up to 3 pieces in their respected slots.) (Chest, Helmet, Legs)" },
-            { slot: "Helmet", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Helmet", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Helmet", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Legs", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Legs", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Legs", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Legs", name: "Armadyl Archer 1", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Legs", name: "Armadyl Archer 2", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Legs", name: "Armadyl Archer 3", effect: "Accuracy and Damage buff to Armadyl minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Legs", name: "Spell Suppressor 1", effect: "1% chance to reduce incoming magic damage." },
-            { slot: "Legs", name: "Spell Suppressor 2", effect: "2% chance to reduce incoming magic damage." },
-            { slot: "Legs", name: "Spell Suppressor 3", effect: "3% chance to reduce incoming magic damage." },
-            { slot: "Legs", name: "Range Suppressor 1", effect: "1% chance to reduce incoming ranged damage." },
-            { slot: "Legs", name: "Range Suppressor 2", effect: "2% chance to reduce incoming ranged damage." },
-            { slot: "Legs", name: "Range Suppressor 3", effect: "3% chance to reduce incoming ranged damage." },
-            { slot: "Legs", name: "Melee Suppressor 1", effect: "1% chance to reduce incoming melee damage." },
-            { slot: "Legs", name: "Melee Suppressor 2", effect: "2% chance to reduce incoming melee damage." },
-            { slot: "Legs", name: "Melee Suppressor 3", effect: "3% chance to reduce incoming melee damage." },
-            { slot: "Legs", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Weapons", name: "Dragon Slayer 1", effect: "Buffs your accuracy and damage to dragons, by 2%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Weapons", name: "Dragon Slayer 2", effect: "Buffs your accuracy and damage to dragons, by 3%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Weapons", name: "Dragon Slayer 3", effect: "Buffs your accuracy and damage to dragons, by 5%, up to 7 times per respected pieces worn. (Helmet, Chest, Legs, Shield, Gloves, Boots, Weapon)" },
-            { slot: "Weapons", name: "Bandos Berserker 1", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Bandos Berserker 2", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Bandos Berserker 3", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Saradomin Slayer 1", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Saradomin Slayer 2", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Saradomin Slayer 3", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Weapons", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Weapons", name: "Blacksmith", effect: "Chance to smith 2 projects at once." },
-            { slot: "Weapons", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Weapons", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Weapons", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Weapons", name: "Reduced Special 1", effect: "Special Attacks use 10% less energy." },
-            { slot: "Weapons", name: "Reduced Special 2", effect: "Special Attacks use 25% less energy." },
-            { slot: "Weapons", name: "Reduced Special 3", effect: "Special Attacks use 50% less energy." },
-            { slot: "Weapons", name: "Fire Damage 1", effect: "10% chance to deal 6 damage to your target." },
-            { slot: "Weapons", name: "Fire Damage 2", effect: "10% chance to deal 9 damage to your target." },
-            { slot: "Weapons", name: "Fire Damage 3", effect: "10% chance to deal 15 damage to your target." },
-            { slot: "Weapons", name: "Wretched", effect: "Custom perk, effect defined in ItemEffect.java" },
-            { slot: "Gloves", name: "Critical Damage 1", effect: "Critical Hits are buffed to hit 30% more damage.(stacks with Critical Strikes)" },
-            { slot: "Gloves", name: "Critical Damage 2", effect: "Critical Hits are buffed to hit 35% more damage. (stacks with Critical Strikes)" },
-            { slot: "Gloves", name: "Critical Damage 3", effect: "Critical Hits are buffed to hit 40% more damage. (stacks with Critical Strikes)" },
-            { slot: "Gloves", name: "Fire Bender 1", effect: "1% chance to throw a fireball at your target." },
-            { slot: "Gloves", name: "Fire Bender 2", effect: "2% chance to throw a fireball at your target." },
-            { slot: "Gloves", name: "Fire Bender 3", effect: "3% chance to throw a fireball at your target." },
-            { slot: "Gloves", name: "Water Bender 1", effect: "1% chance to drown your target in water." },
-            { slot: "Gloves", name: "Water Bender 2", effect: "2% chance to drown your target in water." },
-            { slot: "Gloves", name: "Water Bender 3", effect: "3% chance to drown your target in water." },
-            { slot: "Gloves", name: "Earth Bender 1", effect: "1% chance to throw a small boulder at your target." },
-            { slot: "Gloves", name: "Earth Bender 2", effect: "2% chance to throw a small boulder at your target." },
-            { slot: "Gloves", name: "Earth Bender 3", effect: "3% chance to throw a small boulder at your target." },
-            { slot: "Gloves", name: "Air Bender 1", effect: "1% chance to throw a bolt of air at your target." },
-            { slot: "Gloves", name: "Air Bender 2", effect: "2% chance to throw a bolt of air at your target." },
-            { slot: "Gloves", name: "Air Bender 3", effect: "3% chance to throw a bolt of air at your target." },
-            { slot: "Gloves", name: "Bandos Berserker 1", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Bandos Berserker 2", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Bandos Berserker 3", effect: "Accuracy and Damage buff to Bandos minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Saradomin Slayer 1", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Saradomin Slayer 2", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Saradomin Slayer 3", effect: "Accuracy and Damage buff to Saradomin minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Zamorak Zealot 1", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 2%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Zamorak Zealot 2", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 3%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Zamorak Zealot 3", effect: "Accuracy and Damage buff to Zamorak minions and bosses, by 5%, per piece worn. (Helmet, Chest, Legs, Gloves, Boots, Shield, Weapon)" },
-            { slot: "Gloves", name: "Master Slayer", effect: "2% extra damage and accuracy, per piece worn. (Up to 6 pieces in their respected slots. (Chest, Legs, Shield, Weapon, Boots, Gloves)" },
-            { slot: "Gloves", name: "Spider Squasher 1", effect: "Accuracy and Damage buff to Spiders by 2%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Gloves", name: "Spider Squasher 2", effect: "Accuracy and Damage buff to Spiders by 3%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Gloves", name: "Spider Squasher 3", effect: "Accuracy and Damage buff to Spiders by 5%, per piece worn. (Helmet, Chest, Legs, Boots, Gloves, Shield, Weapon)" },
-            { slot: "Ring", name: "Lucky Looter 1", effect: "1% chance to receive an extra loot roll." },
-            { slot: "Ring", name: "Lucky Looter 2", effect: "2% chance to receive an extra loot roll." },
-            { slot: "Ring", name: "Lucky Looter 3", effect: "3% chance to receive an extra loot roll." },
-            { slot: "Skilling items", name: "Blacksmith", effect: "Chance to smith 2 projects at once." },
-            { slot: "Necklace", name: "Holy Grace 1", effect: "2% chance to heal 5 Prayer Points on receiving a kill." },
-            { slot: "Necklace", name: "Holy Grace 2", effect: "4% chance to restore 5 Prayer Points on receiving a kill." },
-            { slot: "Necklace", name: "Holy Grace 3", effect: "7% chance to restore Prayer Points on receiving a kill." }
-        ];
-
-        // DOM elements
-        const effectsTable = document.getElementById('effectsTable');
-        const slotFilters = document.getElementById('slotFilters');
-        const searchInput = document.getElementById('searchInput');
-        const noResults = document.getElementById('noResults');
-        const totalEffectsEl = document.getElementById('totalEffects');
-        const showingCountEl = document.getElementById('showingCount');
-        const filterStatusEl = document.getElementById('filterStatus');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const pageInfo = document.getElementById('pageInfo');
-
-        // State
-        let currentSlotFilter = 'all';
-        let currentSearch = '';
-        let currentPage = 1;
-        const effectsPerPage = 15;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set total effects count
-            totalEffectsEl.textContent = gearEffectsData.length;
-            
-            // Create slot filter buttons
-            createSlotFilters();
-            
-            // Render initial table
-            filterEffects();
-            
-            // Event listeners
-            searchInput.addEventListener('input', (e) => {
-                currentSearch = e.target.value.toLowerCase();
-                currentPage = 1;
-                filterEffects();
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.enchant-section').forEach(section => {
+                section.classList.remove('active');
             });
             
-            prevBtn.addEventListener('click', () => {
-                if (currentPage > 1) {
-                    currentPage--;
-                    filterEffects();
-                }
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            nextBtn.addEventListener('click', () => {
-                const filteredData = getFilteredData();
-                const totalPages = Math.ceil(filteredData.length / effectsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    filterEffects();
-                }
-            });
+            // Show selected section
+            document.getElementById(sectionId + '-section').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Show helmet section by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('helmet-section').classList.add('active');
         });
 
-        // Create slot filter buttons
-        function createSlotFilters() {
-            // Get unique slots
-            const slots = [...new Set(gearEffectsData.map(item => item.slot))];
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'puppy' ? 'default' : 'puppy';
+            body.setAttribute('data-theme', newTheme);
             
-            // Create "All" button
-            const allButton = document.createElement('button');
-            allButton.classList.add('slot-btn', 'active');
-            allButton.textContent = 'All Slots';
-            allButton.dataset.slot = 'all';
-            allButton.addEventListener('click', () => setSlotFilter('all'));
-            slotFilters.appendChild(allButton);
-            
-            // Create buttons for each slot
-            slots.forEach(slot => {
-                const button = document.createElement('button');
-                button.classList.add('slot-btn');
-                button.textContent = slot;
-                button.dataset.slot = slot;
-                button.addEventListener('click', () => setSlotFilter(slot));
-                slotFilters.appendChild(button);
-            });
+            // Update button text
+            const button = document.querySelector('.theme-toggle');
+            button.textContent = newTheme === 'puppy' ? 'Switch to Dark Theme' : 'Switch to Puppy Theme';
         }
 
-        // Set slot filter
-        function setSlotFilter(slot) {
-            currentSlotFilter = slot;
-            currentPage = 1;
-            
-            // Update active button
-            document.querySelectorAll('.slot-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.slot === slot) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // Update filter status
-            filterStatusEl.textContent = slot === 'all' ? 'All Slots' : slot;
-            
-            filterEffects();
-        }
-
-        // Get filtered data based on current filters
-        function getFilteredData() {
-            return gearEffectsData.filter(item => {
-                // Slot filter
-                const slotMatch = currentSlotFilter === 'all' || item.slot === currentSlotFilter;
-                
-                // Search filter
-                const searchMatch = !currentSearch || 
-                    item.name.toLowerCase().includes(currentSearch) ||
-                    item.effect.toLowerCase().includes(currentSearch) ||
-                    item.slot.toLowerCase().includes(currentSearch);
-                
-                return slotMatch && searchMatch;
-            });
-        }
-
-        // Filter effects and render table
-        function filterEffects() {
-            const filteredData = getFilteredData();
-            const totalEffects = filteredData.length;
-            
-            // Update showing count
-            showingCountEl.textContent = totalEffects;
-            
-            // Show/hide no results message
-            if (totalEffects === 0) {
-                noResults.style.display = 'block';
-                effectsTable.innerHTML = '';
-                updatePagination(totalEffects);
-                return;
-            }
-            
-            noResults.style.display = 'none';
-            
-            // Pagination
-            const totalPages = Math.ceil(totalEffects / effectsPerPage);
-            const startIndex = (currentPage - 1) * effectsPerPage;
-            const endIndex = Math.min(startIndex + effectsPerPage, totalEffects);
-            const paginatedData = filteredData.slice(startIndex, endIndex);
-            
-            // Render table
-            renderTable(paginatedData);
-            
-            // Update pagination controls
-            updatePagination(totalEffects);
-        }
-
-        // Render table with data
-        function renderTable(data) {
-            effectsTable.innerHTML = '';
-            
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                
-                const slotCell = document.createElement('td');
-                slotCell.classList.add('slot-cell');
-                slotCell.textContent = item.slot;
-                
-                const nameCell = document.createElement('td');
-                nameCell.classList.add('name-cell');
-                nameCell.textContent = item.name;
-                
-                const effectCell = document.createElement('td');
-                effectCell.classList.add('effect-cell');
-                effectCell.textContent = item.effect;
-                
-                row.appendChild(slotCell);
-                row.appendChild(nameCell);
-                row.appendChild(effectCell);
-                
-                effectsTable.appendChild(row);
-            });
-        }
-
-        // Update pagination controls
-        function updatePagination(totalItems) {
-            const totalPages = Math.ceil(totalItems / effectsPerPage);
-            
-            // Update page info
-            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-            
-            // Disable/enable buttons
-            prevBtn.disabled = currentPage === 1;
-            nextBtn.disabled = currentPage === totalPages || totalPages === 0;
-        }
+        // Initialize theme
+        document.body.setAttribute('data-theme', 'default');
+        document.querySelector('.theme-toggle').textContent = 'Switch to Puppy Theme';
     </script>
 </body>
 </html>
